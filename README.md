@@ -1,4 +1,5 @@
 # a-whather--App-
+Weather App project built using Python, Tkinter and OpenWeather API
 wheather app using python, Tkinter and OpenWeathermap API
 **Team Mebers**
 |Adel Mahmoud Mohamed Soliman|(24040021)
