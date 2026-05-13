@@ -13,7 +13,7 @@ def get_weather():
 
     result_label.config(text="Loading...", fg=ACCENT_BLUE)
     root.update()
-
+    #no eizk with out risk
     try:
         url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=ar"
         response = requests.get(url, timeout=10)
