@@ -8,10 +8,10 @@ API_KEY = os.environ.get("OPENWEATHER_API_KEY","YOUR_API_KEY_HERE")
 def get_weather():
     city = city_entry.get().strip()
     if not city:
-        result_label.config(text="Please enter a city name", fg="#e74c3c")
+        result_label.config(text="Please enter a city name", fg=ACCENT_RED)
         return
 
-    result_label.config(text="Loading...", fg="#3498db")
+    result_label.config(text="Loading...", fg=ACCENT_BLUE)
     root.update()
 
     try:
@@ -23,7 +23,7 @@ def get_weather():
             show_weather(data, city)
 
         elif response.status_code == 401:
-            result_label.config(fg="#e74c3c", text="Invalid API Key or not activated yet")
+            result_label.config(fg=ACCENT_RED, text="Invalid API Key or not activated yet")
 
         elif response.status_code == 404:
             try:
@@ -35,18 +35,19 @@ def get_weather():
                     data2 = requests.get(url2, timeout=10).json()
                     show_weather(data2, city)
                 else:
-                    result_label.config(fg="#e74c3c", text=f"City '{city}' not found")
+                    result_label.config(fg=ACCENT_RED, text=f"City '{city}' not found")
             except:
-                result_label.config(fg="#e74c3c", text=f"City '{city}' not found")
+                result_label.config(fg=ACCENT_RED, text=f"City '{city}' not found")
+
         else:
-            result_label.config(fg="#e74c3c", text=f"Error {response.status_code}: {data.get('message', 'Unknown error')}")
+            result_label.config(fg=ACCENT_RED, text=f"Error {response.status_code}: {data.get('message', 'Unknown error')}")
 
     except requests.exceptions.ConnectionError:
-        result_label.config(fg="#e74c3c", text="No internet connection")
+        result_label.config(fg=ACCENT_RED, text="No internet connection")
     except requests.exceptions.Timeout:
-        result_label.config(fg="#e74c3c", text="Request timed out, try again")
+        result_label.config(fg=ACCENT_RED, text="Request timed out, try again")
     except Exception as e:
-        result_label.config(fg="#e74c3c", text=f"Unexpected error: {e}")
+        result_label.config(fg=ACCENT_RED, text=f"Unexpected error: {e}")
 
 def show_weather(data, city):
     temp    = data["main"]["temp"]
@@ -55,8 +56,9 @@ def show_weather(data, city):
     humidity= data["main"]["humidity"]
     wind    = data["wind"]["speed"]
     country = data["sys"]["country"]
+
     result_label.config(
-        fg="#2c3e50",
+        fg=TEXT_COLOR,
         text=(
             f"📍 {city.title()}, {country}\n\n"
             f"🌡  Temperature : {temp}°C  (feels like {feels}°C)\n"
@@ -71,42 +73,98 @@ def clear_result():
     result_label.config(text="")
     city_entry.focus()
 
-# ── GUI Setup ──────────────────────────────────────────────
+
+# ── COLORS ONLY (Dark Mode) ─────────────────────
+BG_COLOR = "#1e272e"
+CARD_COLOR = "#2f3640"
+TEXT_COLOR = "#f5f6fa"
+ACCENT_BLUE = "#00a8ff"
+ACCENT_RED = "#e84118"
+INPUT_BG = "#353b48"
+BTN_GRAY = "#718093"
+
+
+# ── GUI Setup ───────────────────────────────────
 root = tk.Tk()
 root.title("Weather App")
 root.geometry("380x320")
-root.configure(bg="#ecf0f1")
+root.configure(bg=BG_COLOR)
 root.resizable(False, False)
 
 title_font  = font.Font(family="Helvetica", size=16, weight="bold")
 label_font  = font.Font(family="Helvetica", size=11)
 result_font = font.Font(family="Courier",   size=10)
 
-tk.Label(root, text="🌦 Weather App", font=title_font,
-         bg="#ecf0f1", fg="#2c3e50").pack(pady=(15, 5))
+tk.Label(
+    root,
+    text="🌦 Weather App",
+    font=title_font,
+    bg=BG_COLOR,
+    fg=ACCENT_BLUE
+).pack(pady=(15, 5))
 
-tk.Label(root, text="Enter City Name:", font=label_font,
-         bg="#ecf0f1", fg="#555").pack()
+tk.Label(
+    root,
+    text="Enter City Name:",
+    font=label_font,
+    bg=BG_COLOR,
+    fg=TEXT_COLOR
+).pack()
 
-city_entry = tk.Entry(root, font=label_font, width=25,
-                      relief="flat", bd=2, bg="white")
+city_entry = tk.Entry(
+    root,
+    font=label_font,
+    width=25,
+    relief="flat",
+    bg=INPUT_BG,
+    fg=TEXT_COLOR,
+    insertbackground=TEXT_COLOR,
+    justify="center"
+)
 city_entry.pack(pady=6, ipady=4)
 city_entry.focus()
 city_entry.bind("<Return>", lambda e: get_weather())
 
-btn_frame = tk.Frame(root, bg="#ecf0f1")
+btn_frame = tk.Frame(root, bg=BG_COLOR)
 btn_frame.pack(pady=6)
 
-tk.Button(btn_frame, text="Get Weather", command=get_weather,
-          font=label_font, bg="#3498db", fg="white",
-          relief="flat", padx=12, pady=4, cursor="hand2").pack(side="left", padx=4)
+tk.Button(
+    btn_frame,
+    text="Get Weather",
+    command=get_weather,
+    font=label_font,
+    bg=ACCENT_BLUE,
+    fg="white",
+    relief="flat",
+    padx=12,
+    pady=4,
+    cursor="hand2",
+    activebackground="#0097e6"
+).pack(side="left", padx=4)
 
-tk.Button(btn_frame, text="Clear", command=clear_result,
-          font=label_font, bg="#95a5a6", fg="white",
-          relief="flat", padx=12, pady=4, cursor="hand2").pack(side="left", padx=4)
+tk.Button(
+    btn_frame,
+    text="Clear",
+    command=clear_result,
+    font=label_font,
+    bg=BTN_GRAY,
+    fg="white",
+    relief="flat",
+    padx=12,
+    pady=4,
+    cursor="hand2"
+).pack(side="left", padx=4)
 
-result_label = tk.Label(root, text="", font=result_font,
-                        bg="#ecf0f1", fg="#2c3e50", justify="left")
+result_label = tk.Label(
+    root,
+    text="",
+    font=result_font,
+    bg=CARD_COLOR,
+    fg=TEXT_COLOR,
+    justify="left",
+    padx=10,
+    pady=10
+)
 result_label.pack(pady=10)
 
 root.mainloop()
