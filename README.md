@@ -24,3 +24,4 @@ Weather App project built using Python, Tkinter and OpenWeather API
  **Known Limitations**
 - Requires internet connection
 - Free API key limited to 60 requests per minute
+- Custom terminal text coloring for enhanced readability
