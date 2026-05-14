@@ -17,7 +17,8 @@ Weather App project built using Python, Tkinter and OpenWeather API
    python weather.py
 ```
 ** Features* *
-- Search weather by city name in English or Arabic
+- Search weather by city name in English or Arabic 
+- Great work! The project structure is clean and organized, and the implementation looks Keep goning
 - Shows temperature, weather description, humidity, and wind speed
 - Error handling for invalid city names or no internet connection
 
